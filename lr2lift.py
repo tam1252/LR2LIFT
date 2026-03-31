@@ -24,7 +24,6 @@ LIFT_KEYWORDS = [
 LIFT_JUDGE_KEYWORDS = [
     "ジャッジ",    # ジャッジ表示
     "ghost type",  # ghost typeA
-    "FAST",        # FAST,SLOW
 ]
 
 # DST_の引数定義: #DST_XXX, index, time, x, y, w, h, ...
@@ -74,11 +73,11 @@ def parse_marker(lines):
 
 
 def get_section_flag(comment_line):
-    """コメント行からセクションのフラグ(L/LS/None)を返す"""
+    """コメント行からセクションのフラグ(L/None)を返す"""
     lower = comment_line.lower()
     for kw in LIFT_JUDGE_KEYWORDS:
         if kw.lower() in lower:
-            return 'LS'
+            return 'L'
     for kw in LIFT_KEYWORDS:
         if kw.lower() in lower:
             return 'L'
