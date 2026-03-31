@@ -158,6 +158,9 @@ def apply_lift(lines, has_marker, lift_delta, judge_delta):
         if len(parts) <= Y_COL:
             continue
 
+        if parts[0].startswith('#DST_NOWCOMBO'):
+            continue
+
         try:
             y = int(parts[Y_COL])
         except ValueError:
@@ -321,6 +324,10 @@ class LR2LiftApp:
             parts = self.lines[i].split(',')
             if len(parts) <= Y_COL:
                 continue
+
+            if parts[0].startswith('#DST_NOWCOMBO'):
+                continue
+
             try:
                 y = int(parts[Y_COL])
             except ValueError:
