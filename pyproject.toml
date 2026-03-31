@@ -1,0 +1,9 @@
+[project]
+name = "lr2lift"
+version = "0.1.0"
+description = "LR2スキンCSVのLIFT値を自動調整するツール"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "pyinstaller>=6.19.0",
+]
