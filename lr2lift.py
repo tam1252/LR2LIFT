@@ -93,7 +93,7 @@ def scan_sections(lines, has_marker):
     """
     result = {}
     current_flag = None
-    after_blank = True   # ファイル先頭は「空行後」扱い
+    blank_count = 2      # ファイル先頭は複数空行後と同じ扱い
     start = 1 if has_marker else 0
 
     # 構造コメント: フラグ判定をスキップ (//SRC定義, //DST定義 など)
@@ -103,10 +103,14 @@ def scan_sections(lines, has_marker):
         line = lines[i]
         stripped = line.strip()
 
-        # 空行(またはカンマのみ行)は after_blank をセット
+        # 空行(またはカンマのみ行)は blank_count をインクリメント
         if not stripped or stripped.replace(',', '') == '':
-            after_blank = True
+            blank_count += 1
             continue
+
+        # 非空行: 直前の空行数を取得してからリセット
+        after_blank = blank_count >= 2
+        blank_count = 0
 
         parts = line.split(',')
 
@@ -120,13 +124,10 @@ def scan_sections(lines, has_marker):
                     # キーワード一致: 空行後・途中どちらでも常にフラグを更新
                     current_flag = flag
                 elif after_blank:
-                    # キーワード無しのコメントが空行後に来た場合のみリセット
-                    # (同一セクション内の複数コメントは after_blank=False のため維持)
+                    # キーワード無しのコメントが2行以上の空行後に来た場合のみリセット
+                    # (1行区切りのサブセクション //1, //2 などは維持)
                     current_flag = None
-            after_blank = False
             continue
-
-        after_blank = False
 
         # DST_行を処理
         if parts[0].startswith('#DST_'):
